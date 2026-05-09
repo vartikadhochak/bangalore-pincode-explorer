@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -8,6 +9,8 @@ import {
   FiClock,
   FiTrash2,
   FiBriefcase,
+  FiMic,
+  FiMicOff,
 } from 'react-icons/fi';
 
 const suggestions = [
@@ -35,6 +38,8 @@ const SearchBar = ({ setResults }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [recentSearches, setRecentSearches] = useState([]);
+  const [isListening, setIsListening] = useState(false);
+ 
 
   const searchData = async () => {
 
@@ -88,6 +93,89 @@ const SearchBar = ({ setResults }) => {
     }
   };
 
+const startVoiceSearch = () => {
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+
+    alert('Voice Search not supported');
+
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = 'en-IN';
+
+  recognition.continuous = false;
+
+  recognition.interimResults = false;
+
+  recognition.maxAlternatives = 1;
+
+  setIsListening(true);
+
+  recognition.start();
+
+  recognition.onstart = () => {
+  console.log('VOICE STARTED');
+};
+
+  recognition.onresult = async (event) => {
+
+    console.log('VOICE RESULT RECEIVED');
+  try {
+
+    const transcript =
+      event.results[0][0].transcript;
+
+    console.log('Transcript:', transcript);
+
+    setInput(transcript);
+
+    let res;
+
+    if (/^[0-9]+$/.test(transcript)) {
+
+      res = await axios.get(
+        `https://bangalore-pincode-api.onrender.com/api/pincode/${transcript}`
+      );
+
+    } else {
+
+      res = await axios.get(
+        `https://bangalore-pincode-api.onrender.com/api/area/${transcript}`
+      );
+
+    }
+
+    setResults(res.data);
+
+  } catch (err) {
+
+    console.log(err);
+
+  } finally {
+
+    setIsListening(false);
+
+  }
+};
+
+ recognition.onerror = (event) => {
+
+  console.log('VOICE ERROR:', event.error);
+
+  setIsListening(false);
+};
+
+  recognition.onend = () => {
+    setIsListening(false);
+  };
+};
   useEffect(() => {
 
     const delay = setTimeout(() => {
@@ -140,26 +228,27 @@ const SearchBar = ({ setResults }) => {
           />
 
           <input
-            type="text"
-            placeholder="Search area or pincode..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="
-              w-full
-              rounded-2xl
-              bg-white
-              py-5
-              pl-14
-              pr-5
-              text-lg
-              text-slate-700
-              outline-none
-              border-2
-              border-cyan-400
-              shadow-[0_0_30px_rgba(0,180,255,0.35)]
-              placeholder:text-slate-400
-            "
-          />
+  type="text"
+  placeholder="Search area or pincode..."
+  value={input}
+  onChange={(e) => setInput(e.target.value)}
+  className="
+    w-full
+    rounded-2xl
+    bg-white
+    py-5
+    pl-14
+    pr-5
+    text-lg
+    text-slate-700
+    outline-none
+    border-2
+    border-cyan-400
+    shadow-[0_0_30px_rgba(0,180,255,0.35)]
+    placeholder:text-slate-400
+  "
+/>
+
 
         </div>
 
@@ -198,7 +287,7 @@ const SearchBar = ({ setResults }) => {
         </div>
 
         {/* Search Button */}
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center items-center gap-4 mt-8">
 
           <button
             onClick={searchData}
@@ -223,6 +312,33 @@ const SearchBar = ({ setResults }) => {
             Search
 
           </button>
+          <button
+  onClick={startVoiceSearch}
+  className={`
+    h-[64px]
+    px-6
+    rounded-2xl
+    border border-cyan-400/20
+    flex
+    items-center
+    justify-center
+    transition-all duration-300
+    shadow-lg
+    ${
+      isListening
+        ? 'bg-red-500 text-white animate-pulse'
+        : 'bg-[#0d1f42] text-cyan-100 hover:bg-cyan-500'
+    }
+  `}
+>
+
+  {isListening ? (
+    <FiMicOff size={22} />
+  ) : (
+    <FiMic size={22} />
+  )}
+
+</button>
 
         </div>
 
