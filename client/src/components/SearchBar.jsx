@@ -113,14 +113,15 @@ const SearchBar = ({ setResults }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="
-          max-w-5xl
+          w-full
+          max-w-6xl
           mx-auto
           rounded-[36px]
           border border-cyan-400/10
           bg-[#09152d]/80
           backdrop-blur-2xl
           shadow-[0_0_80px_rgba(0,180,255,0.15)]
-          p-8 md:p-10
+          p-6 md:p-10
         "
       >
 
