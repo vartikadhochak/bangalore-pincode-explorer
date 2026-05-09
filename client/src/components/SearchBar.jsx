@@ -68,16 +68,17 @@ const SearchBar = ({ setResults }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white/20 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/20 flex flex-col gap-6 items-center max-w-2xl mx-auto"
+      className="bg-white/10 backdrop-blur-2xl border border-white/10 rounded-[32px] p-8 md:p-10 shadow-2xl"
     >
 
-      <div className="relative w-full md:w-96">
+      {/* Search Input */}
+      <div className="relative max-w-2xl mx-auto">
 
         <FiSearch
-          className="absolute left-4 top-5 text-slate-500"
+          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"
           size={22}
         />
 
@@ -86,58 +87,72 @@ const SearchBar = ({ setResults }) => {
           placeholder="Search area or pincode..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/70 border border-slate-300 outline-none text-slate-800 placeholder-slate-500 focus:ring-2 focus:ring-cyan-400"
+          className="w-full bg-white/90 text-slate-800 placeholder-slate-500 rounded-2xl py-5 pl-14 pr-5 text-lg outline-none border border-slate-200 focus:ring-4 focus:ring-cyan-400/40"
         />
+
       </div>
 
-      <div className="flex flex-wrap gap-3 justify-center">
+      {/* Suggestions */}
+      <div className="flex flex-wrap justify-center gap-4 mt-8">
+
         {suggestions.map((item, index) => (
           <button
             key={index}
             onClick={() => setInput(item)}
-            className="bg-white/70 text-slate-800 border border-slate-300 px-4 py-2 rounded-full hover:bg-cyan-500 hover:text-white transition-all duration-300"
+            className="px-5 py-3 rounded-2xl bg-white/80 hover:bg-cyan-500 hover:text-white transition-all duration-300 text-slate-700 font-medium shadow-md"
           >
             {item}
           </button>
         ))}
+
       </div>
 
-      <button
-        onClick={searchData}
-        className="bg-cyan-500 hover:bg-cyan-400 hover:scale-105 transition-all duration-300 text-white px-8 py-3 rounded-2xl font-semibold shadow-lg"
-      >
-        Search
-      </button>
+      {/* Search Button */}
+      <div className="flex justify-center mt-8">
 
+        <button
+          onClick={searchData}
+          className="bg-cyan-500 hover:bg-cyan-400 hover:scale-105 transition-all duration-300 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl"
+        >
+          Search
+        </button>
+
+      </div>
+
+      {/* Loading */}
       {loading && (
-        <p className="text-cyan-600 text-lg animate-pulse">
+        <p className="text-cyan-300 text-center mt-6 animate-pulse">
           Searching...
         </p>
       )}
 
+      {/* Error */}
       {error && (
-        <p className="text-red-500 text-lg">
+        <p className="text-red-400 text-center mt-6">
           {error}
         </p>
       )}
 
+      {/* Recent Searches */}
       {recentSearches.length > 0 && (
-        <div className="w-full mt-4">
+        <div className="mt-10">
 
-          <h3 className="text-slate-700 mb-3 text-lg font-semibold">
+          <h3 className="text-slate-300 text-sm uppercase tracking-wider mb-4 text-center">
             Recent Searches
           </h3>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap justify-center gap-3">
+
             {recentSearches.map((item, index) => (
               <button
                 key={index}
                 onClick={() => setInput(item)}
-                className="bg-cyan-100 text-slate-800 border border-cyan-300 px-4 py-2 rounded-full hover:bg-cyan-500 hover:text-white transition-all duration-300"
+                className="px-4 py-2 rounded-full bg-cyan-500/20 border border-cyan-400/20 hover:bg-cyan-500 hover:text-white transition-all duration-300 text-cyan-100"
               >
                 {item}
               </button>
             ))}
+
           </div>
 
         </div>
