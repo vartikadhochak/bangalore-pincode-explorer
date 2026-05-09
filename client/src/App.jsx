@@ -118,14 +118,14 @@ function App() {
 
 </div>
       {/* Search */}
-      <div className="relative z-10 px-6 md:px-16 mt-12">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-6 mt-10">
 
         <SearchBar setResults={setResults} />
 
       </div>
 
       {/* Map */}
-      <div className="relative z-10 px-6 md:px-16 mt-12">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-6 mt-10">
 
         <MapView
           area={results.length > 0 ? results[0].area : 'Bangalore'}
