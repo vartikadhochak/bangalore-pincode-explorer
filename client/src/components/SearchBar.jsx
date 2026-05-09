@@ -105,9 +105,8 @@ const SearchBar = ({ setResults }) => {
   return (
     <>
 
-      <h1 className="text-red-500 text-5xl text-center mb-10">
-        TEST UI CHANGED
-      </h1>
+
+
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
