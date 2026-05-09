@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { FiSearch } from 'react-icons/fi';
+import {
+  FiSearch,
+  FiClock,
+  FiMapPin,
+} from 'react-icons/fi';
 
 const suggestions = [
   'Whitefield',
@@ -68,18 +72,27 @@ const SearchBar = ({ setResults }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 25 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white/10 backdrop-blur-2xl border border-white/10 rounded-[32px] p-8 md:p-10 shadow-2xl"
+      className="
+        bg-white/10
+        backdrop-blur-2xl
+        border border-white/10
+        rounded-[32px]
+        shadow-2xl
+        p-8 md:p-10
+        max-w-5xl
+        mx-auto
+      "
     >
 
       {/* Search Input */}
-      <div className="relative max-w-2xl mx-auto">
+      <div className="relative w-full">
 
         <FiSearch
           className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"
-          size={22}
+          size={24}
         />
 
         <input
@@ -87,7 +100,22 @@ const SearchBar = ({ setResults }) => {
           placeholder="Search area or pincode..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="w-full bg-white/90 text-slate-800 placeholder-slate-500 rounded-2xl py-5 pl-14 pr-5 text-lg outline-none border border-slate-200 focus:ring-4 focus:ring-cyan-400/40"
+          className="
+            w-full
+            bg-white/90
+            text-slate-800
+            placeholder-slate-500
+            rounded-3xl
+            py-5
+            pl-14
+            pr-5
+            text-lg
+            outline-none
+            border border-white/20
+            focus:ring-4
+            focus:ring-cyan-400/30
+            shadow-lg
+          "
         />
 
       </div>
@@ -99,8 +127,20 @@ const SearchBar = ({ setResults }) => {
           <button
             key={index}
             onClick={() => setInput(item)}
-            className="px-5 py-3 rounded-2xl bg-white/80 hover:bg-cyan-500 hover:text-white transition-all duration-300 text-slate-700 font-medium shadow-md"
+            className="
+              flex items-center gap-2
+              px-5 py-3
+              rounded-2xl
+              bg-white/5
+              border border-white/10
+              text-white
+              hover:bg-cyan-500
+              hover:border-cyan-400
+              transition-all duration-300
+              shadow-lg
+            "
           >
+            <FiMapPin size={16} />
             {item}
           </button>
         ))}
@@ -112,8 +152,22 @@ const SearchBar = ({ setResults }) => {
 
         <button
           onClick={searchData}
-          className="bg-cyan-500 hover:bg-cyan-400 hover:scale-105 transition-all duration-300 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl"
+          className="
+            flex items-center gap-3
+            bg-gradient-to-r
+            from-cyan-400
+            to-blue-500
+            hover:scale-105
+            transition-all duration-300
+            text-white
+            px-10 py-4
+            rounded-2xl
+            font-bold
+            text-lg
+            shadow-2xl
+          "
         >
+          <FiSearch size={20} />
           Search
         </button>
 
@@ -135,20 +189,59 @@ const SearchBar = ({ setResults }) => {
 
       {/* Recent Searches */}
       {recentSearches.length > 0 && (
-        <div className="mt-10">
+        <div className="mt-10 border-t border-white/10 pt-6">
 
-          <h3 className="text-slate-300 text-sm uppercase tracking-wider mb-4 text-center">
-            Recent Searches
-          </h3>
+          <div className="flex items-center justify-between mb-5">
 
-          <div className="flex flex-wrap justify-center gap-3">
+            <div className="flex items-center gap-3">
+
+              <FiClock
+                className="text-cyan-400"
+                size={22}
+              />
+
+              <h3 className="text-cyan-100 text-xl font-semibold">
+                Recent Searches
+              </h3>
+
+            </div>
+
+            <button
+              onClick={() => setRecentSearches([])}
+              className="
+                text-cyan-300
+                hover:text-white
+                transition-all duration-300
+                text-sm
+              "
+            >
+              Clear All
+            </button>
+
+          </div>
+
+          <div className="flex flex-wrap gap-4">
 
             {recentSearches.map((item, index) => (
               <button
                 key={index}
                 onClick={() => setInput(item)}
-                className="px-4 py-2 rounded-full bg-cyan-500/20 border border-cyan-400/20 hover:bg-cyan-500 hover:text-white transition-all duration-300 text-cyan-100"
+                className="
+                  flex items-center gap-2
+                  px-5 py-3
+                  rounded-2xl
+                  bg-white/5
+                  border border-cyan-400/20
+                  text-cyan-50
+                  hover:bg-cyan-500
+                  hover:border-cyan-400
+                  hover:scale-105
+                  transition-all duration-300
+                  shadow-lg
+                  backdrop-blur-xl
+                "
               >
+                <FiClock size={16} />
                 {item}
               </button>
             ))}
