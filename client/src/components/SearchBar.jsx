@@ -27,11 +27,11 @@ const SearchBar = ({ setResults }) => {
 
       if (/^[0-9]+$/.test(input)) {
         res = await axios.get(
-          `http://localhost:5000/api/pincode/${input}`
+          `https://bangalore-pincode-api.onrender.com/api/pincode/${input}`
         );
       } else {
         res = await axios.get(
-          `http://localhost:5000/api/area/${input}`
+          `https://bangalore-pincode-api.onrender.com/api/area/${input}`
         );
       }
 
