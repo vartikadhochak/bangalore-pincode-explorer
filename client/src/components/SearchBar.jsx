@@ -1,98 +1,137 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+
 import {
   FiSearch,
-  FiClock,
   FiMapPin,
+  FiClock,
+  FiTrash2,
+  FiBriefcase,
 } from 'react-icons/fi';
 
 const suggestions = [
-  'Whitefield',
-  'Koramangala',
-  'Indiranagar',
-  'Electronic City',
+  {
+    name: 'Whitefield',
+    icon: <FiMapPin />,
+  },
+  {
+    name: 'Koramangala',
+    icon: <FiBriefcase />,
+  },
+  {
+    name: 'Indiranagar',
+    icon: <FiMapPin />,
+  },
+  {
+    name: 'Electronic City',
+    icon: <FiBriefcase />,
+  },
 ];
 
 const SearchBar = ({ setResults }) => {
+
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [recentSearches, setRecentSearches] = useState([]);
 
   const searchData = async () => {
+
     if (!input.trim()) return;
 
     try {
+
       setLoading(true);
       setError('');
 
       let res;
 
       if (/^[0-9]+$/.test(input)) {
+
         res = await axios.get(
           `https://bangalore-pincode-api.onrender.com/api/pincode/${input}`
         );
+
       } else {
+
         res = await axios.get(
           `https://bangalore-pincode-api.onrender.com/api/area/${input}`
         );
+
       }
 
       setResults(res.data);
 
       if (!recentSearches.includes(input)) {
+
         setRecentSearches((prev) => [
           input,
           ...prev.slice(0, 4),
         ]);
+
       }
 
       if (res.data.length === 0) {
-        setError('No results found.');
+        setError('No results found');
       }
 
     } catch (err) {
-      setError('Something went wrong.');
+
+      setError('Something went wrong');
       console.log(err);
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
   useEffect(() => {
+
     const delay = setTimeout(() => {
+
       if (input.length > 2) {
         searchData();
       }
-    }, 600);
+
+    }, 700);
 
     return () => clearTimeout(delay);
+
   }, [input]);
 
   return (
+
     <motion.div
-      initial={{ opacity: 0, y: 25 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="
-        bg-white/10
-        backdrop-blur-2xl
-        border border-white/10
-        rounded-[32px]
-        shadow-2xl
-        p-8 md:p-10
         max-w-5xl
         mx-auto
+        rounded-[36px]
+        border border-cyan-400/10
+        bg-[#09152d]/80
+        backdrop-blur-2xl
+        shadow-[0_0_80px_rgba(0,180,255,0.15)]
+        p-8 md:p-10
       "
     >
 
       {/* Search Input */}
-      <div className="relative w-full">
+      <div className="relative">
 
         <FiSearch
-          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400"
           size={24}
+          className="
+            absolute
+            left-5
+            top-1/2
+            -translate-y-1/2
+            text-slate-400
+          "
         />
 
         <input
@@ -102,19 +141,18 @@ const SearchBar = ({ setResults }) => {
           onChange={(e) => setInput(e.target.value)}
           className="
             w-full
-            bg-white/90
-            text-slate-800
-            placeholder-slate-500
-            rounded-3xl
+            rounded-2xl
+            bg-white
             py-5
             pl-14
             pr-5
             text-lg
+            text-slate-700
             outline-none
-            border border-white/20
-            focus:ring-4
-            focus:ring-cyan-400/30
-            shadow-lg
+            border-2
+            border-cyan-400
+            shadow-[0_0_30px_rgba(0,180,255,0.35)]
+            placeholder:text-slate-400
           "
         />
 
@@ -124,25 +162,32 @@ const SearchBar = ({ setResults }) => {
       <div className="flex flex-wrap justify-center gap-4 mt-8">
 
         {suggestions.map((item, index) => (
+
           <button
             key={index}
-            onClick={() => setInput(item)}
+            onClick={() => setInput(item.name)}
             className="
               flex items-center gap-2
               px-5 py-3
               rounded-2xl
-              bg-white/5
-              border border-white/10
-              text-white
+              bg-[#0e1d3c]
+              border border-cyan-400/10
+              text-cyan-100
               hover:bg-cyan-500
-              hover:border-cyan-400
+              hover:text-white
               transition-all duration-300
               shadow-lg
             "
           >
-            <FiMapPin size={16} />
-            {item}
+
+            <span className="text-cyan-300">
+              {item.icon}
+            </span>
+
+            {item.name}
+
           </button>
+
         ))}
 
       </div>
@@ -154,21 +199,24 @@ const SearchBar = ({ setResults }) => {
           onClick={searchData}
           className="
             flex items-center gap-3
+            px-10 py-4
+            rounded-2xl
             bg-gradient-to-r
             from-cyan-400
             to-blue-500
+            text-white
+            text-lg
+            font-bold
+            shadow-[0_0_40px_rgba(0,180,255,0.4)]
             hover:scale-105
             transition-all duration-300
-            text-white
-            px-10 py-4
-            rounded-2xl
-            font-bold
-            text-lg
-            shadow-2xl
           "
         >
+
           <FiSearch size={20} />
+
           Search
+
         </button>
 
       </div>
@@ -189,7 +237,8 @@ const SearchBar = ({ setResults }) => {
 
       {/* Recent Searches */}
       {recentSearches.length > 0 && (
-        <div className="mt-10 border-t border-white/10 pt-6">
+
+        <div className="mt-10 border-t border-cyan-400/10 pt-6">
 
           <div className="flex items-center justify-between mb-5">
 
@@ -209,13 +258,17 @@ const SearchBar = ({ setResults }) => {
             <button
               onClick={() => setRecentSearches([])}
               className="
+                flex items-center gap-2
                 text-cyan-300
                 hover:text-white
                 transition-all duration-300
-                text-sm
               "
             >
+
               Clear All
+
+              <FiTrash2 size={16} />
+
             </button>
 
           </div>
@@ -223,32 +276,35 @@ const SearchBar = ({ setResults }) => {
           <div className="flex flex-wrap gap-4">
 
             {recentSearches.map((item, index) => (
+
               <button
                 key={index}
                 onClick={() => setInput(item)}
                 className="
-                  flex items-center gap-2
+                  flex items-center gap-3
                   px-5 py-3
                   rounded-2xl
-                  bg-white/5
-                  border border-cyan-400/20
-                  text-cyan-50
+                  bg-[#0e1d3c]
+                  border border-cyan-400/10
+                  text-cyan-100
                   hover:bg-cyan-500
-                  hover:border-cyan-400
-                  hover:scale-105
+                  hover:text-white
                   transition-all duration-300
-                  shadow-lg
-                  backdrop-blur-xl
                 "
               >
+
                 <FiClock size={16} />
+
                 {item}
+
               </button>
+
             ))}
 
           </div>
 
         </div>
+
       )}
 
     </motion.div>
